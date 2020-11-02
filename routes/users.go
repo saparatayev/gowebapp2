@@ -2,12 +2,19 @@ package routes
 
 import (
 	"gowebapp2/models"
+	"gowebapp2/sessions"
 	"gowebapp2/utils"
 	"net/http"
 )
 
 func registerGetHandler(w http.ResponseWriter, r *http.Request) {
-	utils.ExecuteTemplate(w, "register.html", nil)
+	session, _ := sessions.Store.Get(r, "session")
+
+	utils.ExecuteTemplate(w, "register.html", struct {
+		Message string
+	}{
+		Message: message,
+	})
 }
 
 func registerPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,6 +32,10 @@ func registerPostHandler(w http.ResponseWriter, r *http.Request) {
 		utils.InternalServerError(w)
 		return
 	}
+
+	session, _ := sessions.Store.Get(r, "session")
+	session.Values["MESSAGE"] = "Succesfully registered"
+	session.Save(r, w)
 
 	http.Redirect(w, r, "/register", 302)
 
