@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gowebapp/models"
-	"gowebapp/routes"
-	"gowebapp/utils"
+	"gowebapp2/models"
+	"gowebapp2/routes"
+	"gowebapp2/utils"
 	"log"
 	"net/http"
 )

@@ -2,8 +2,8 @@ package routes
 
 import (
 	"fmt"
-	"gowebapp/models"
-	"gowebapp/utils"
+	"gowebapp2/models"
+	"gowebapp2/utils"
 	"net/http"
 )
 
@@ -51,7 +51,7 @@ func homePostHandler(w http.ResponseWriter, r *http.Request) {
 
 		for _, p := range products {
 			html += "<tr>"
-			html += fmt.Sprintf("<td>%d</td> <td>%s</td> <td>%s</td> <td>%.2f R$</td> <td>%d</td> <td>>%.2f</td>",
+			html += fmt.Sprintf("<td>%d</td> <td>%s</td> <td>%s</td> <td>%.2f R$</td> <td>%d</td> <td>%.2f</td>",
 				p.Id, p.Category.Description, p.Name, p.Price, p.Quantity, p.Amount)
 			html += "</tr>"
 		}
