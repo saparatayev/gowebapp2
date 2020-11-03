@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
-    <title>Register</title>
+    <title>Login</title>
 </head>
 <body>
 
@@ -25,31 +25,21 @@
                 </li>
               </ul>
               <form class="form-inline my-2 my-lg-0">
-                <a href="/login" class="btn btn-outline-success">Login</a>
+                <a href="/register" class="btn btn-info">Register</a>
               </form>
             </div>
         </nav>
 
         <hr>
         {{ if (ne .Message "") }}
-        <p class="alert alert-success">{{ .Message }}</p>
+        <p class="alert alert-danger">{{ .Message }}</p>
         {{ end }}
+
         <div class="row">
             <div class="col-md-12">
-                <h3>Register</h3>
-                <form action="/register" method="post">
-                    <div class="form-group">
-                        <div class="form-row">
-                            <div class="col-lg-6">
-                                <label>Firstname</label>
-                                <input type="text" class="form-control" placeholder="firstname" name="firstname">
-                            </div>
-                            <div class="col-lg-6">
-                                <label for="">Lastname</label>
-                                <input type="text" class="form-control" placeholder="lastname" name="lastname">
-                            </div>
-                        </div>
-                    </div>
+                <h3>Login</h3>
+                <form action="/login" method="post">
+                    
                     <div class="form-group">
                         <label for="">Email</label>
                         <input type="text" name="email" class="form-control" placeholder="email">
@@ -59,7 +49,7 @@
                         <input type="text" name="password" class="form-control" placeholder="password">
                     </div>
                     <div class="form-group">
-                        <input type="submit" name="" class="btn btn-primary" value="Register">
+                        <input type="submit" name="" class="btn btn-primary" value="Login">
                     </div>
                 </form>
             </div>
