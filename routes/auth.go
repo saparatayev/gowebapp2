@@ -34,7 +34,9 @@ func checkErrAuthenticate(err error, w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		switch err {
-		case auth.ErrEmailNotFound, auth.ErrInvalidPassword:
+		case auth.ErrEmailNotFound,
+			auth.ErrInvalidPassword,
+			auth.ErrEmptyFields:
 			session.Values["MESSAGE"] = fmt.Sprintf("%s", err)
 			session.Values["ALERT"] = "danger"
 			session.Save(r, w)
