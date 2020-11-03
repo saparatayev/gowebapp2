@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gowebapp2/models"
 	"gowebapp2/utils"
+	"strings"
 )
 
 var (
@@ -13,7 +14,7 @@ var (
 )
 
 func Signin(email, password string) (models.User, error) {
-	err := validateFields(email, password)
+	err := validateFields(strings.ToLower(email), password)
 
 	if err != nil {
 		return models.User{}, err
@@ -37,7 +38,7 @@ func Signin(email, password string) (models.User, error) {
 }
 
 func validateFields(email, password string) error {
-	if models.IsEmpty(email) || models.IsEmpty(password) {
+	if models.IsEmpty(models.Trim(email)) || models.IsEmpty(password) {
 		return ErrEmptyFields
 	}
 

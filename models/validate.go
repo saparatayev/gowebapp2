@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/badoux/checkmail"
 )
@@ -22,6 +23,10 @@ func IsEmpty(attr string) bool {
 	return false
 }
 
+func Trim(attr string) string {
+	return strings.TrimSpace(attr)
+}
+
 func IsEmail(email string) bool {
 	err := checkmail.ValidateFormat(email)
 	if err != nil {
@@ -32,6 +37,10 @@ func IsEmail(email string) bool {
 }
 
 func ValidateNewUser(user User) (User, error) {
+	user.Firstname = Trim(user.Firstname)
+	user.Lastname = Trim(user.Lastname)
+	user.Email = Trim(strings.ToLower(user.Email))
+
 	if IsEmpty(user.Firstname) {
 		return User{}, ErrRequiredFirstname
 	}

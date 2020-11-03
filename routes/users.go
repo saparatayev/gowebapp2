@@ -48,6 +48,7 @@ func checkErrRegister(err error, w http.ResponseWriter, r *http.Request) {
 			message = fmt.Sprintf("%s", err)
 		default:
 			utils.InternalServerError(w)
+			fmt.Println(err)
 			return
 		}
 
