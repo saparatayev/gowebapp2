@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrInvalidEmail    = errors.New("Email is not valid")
+	ErrEmailNotFound   = errors.New("No such email")
 	ErrInvalidPassword = errors.New("Password is not valid")
 )
 
@@ -18,7 +18,7 @@ func Signin(email, password string) (models.User, error) {
 	}
 
 	if user.Id == 0 {
-		return user, ErrInvalidEmail
+		return user, ErrEmailNotFound
 	}
 
 	err = utils.VerifyPassword(user.Password, password)

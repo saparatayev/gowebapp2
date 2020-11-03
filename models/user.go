@@ -12,6 +12,11 @@ type User struct {
 }
 
 func NewUser(user User) (bool, error) {
+	user, err := ValidateNewUser(user)
+	if err != nil {
+		return false, err
+	}
+
 	con := Connect()
 	defer con.Close()
 

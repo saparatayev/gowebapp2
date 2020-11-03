@@ -31,8 +31,8 @@
         </nav>
 
         <hr>
-        {{ if (ne .Message "") }}
-        <p class="alert alert-success">{{ .Message }}</p>
+        {{ if (ne .Alert.Message "") }}
+        <p class="alert alert-{{ .Alert.Type }}">{{ .Alert.Message }}</p>
         {{ end }}
         <div class="row">
             <div class="col-md-12">

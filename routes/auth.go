@@ -9,12 +9,12 @@ import (
 )
 
 func loginGetHandler(w http.ResponseWriter, r *http.Request) {
-	message := sessions.Flash(w, r)
+	message, alert := sessions.Flash(w, r)
 
 	utils.ExecuteTemplate(w, "login.html", struct {
-		Message string
+		Alert utils.Alert
 	}{
-		Message: message,
+		Alert: utils.NewAlert(message, alert),
 	})
 }
 
@@ -34,8 +34,9 @@ func checkErrAuthenticate(err error, w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		switch err {
-		case auth.ErrInvalidEmail, auth.ErrInvalidPassword:
+		case auth.ErrEmailNotFound, auth.ErrInvalidPassword:
 			session.Values["MESSAGE"] = fmt.Sprintf("%s", err)
+			session.Values["ALERT"] = "danger"
 			session.Save(r, w)
 			http.Redirect(w, r, "/login", 302)
 			return
