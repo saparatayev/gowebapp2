@@ -43,7 +43,8 @@ func checkErrRegister(err error, w http.ResponseWriter, r *http.Request) {
 		case models.ErrRequiredFirstname,
 			models.ErrRequiredLastname,
 			models.ErrRequiredEmail,
-			models.ErrRequiredPassword:
+			models.ErrRequiredPassword,
+			models.ErrInvalidEmail:
 			message = fmt.Sprintf("%s", err)
 		default:
 			utils.InternalServerError(w)

@@ -13,8 +13,10 @@ var (
 )
 
 func Signin(email, password string) (models.User, error) {
-	if models.IsEmpty(email) || models.IsEmpty(password) {
-		return models.User{}, ErrEmptyFields
+	err := validateFields(email, password)
+
+	if err != nil {
+		return models.User{}, err
 	}
 
 	user, err := models.GetUserByEmail(email)
@@ -32,4 +34,16 @@ func Signin(email, password string) (models.User, error) {
 	}
 
 	return user, nil
+}
+
+func validateFields(email, password string) error {
+	if models.IsEmpty(email) || models.IsEmpty(password) {
+		return ErrEmptyFields
+	}
+
+	if !models.IsEmail(email) {
+		return models.ErrInvalidEmail
+	}
+
+	return nil
 }

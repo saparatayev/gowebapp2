@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"gowebapp2/auth"
+	"gowebapp2/models"
 	"gowebapp2/sessions"
 	"gowebapp2/utils"
 	"net/http"
@@ -35,6 +36,7 @@ func checkErrAuthenticate(err error, w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		switch err {
 		case auth.ErrEmailNotFound,
+			models.ErrInvalidEmail,
 			auth.ErrInvalidPassword,
 			auth.ErrEmptyFields:
 			session.Values["MESSAGE"] = fmt.Sprintf("%s", err)
