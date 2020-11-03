@@ -8,7 +8,7 @@ import (
 )
 
 func registerGetHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(r, "session")
+	message := sessions.Flash(w, r)
 
 	utils.ExecuteTemplate(w, "register.html", struct {
 		Message string
