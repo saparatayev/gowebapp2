@@ -1,5 +1,7 @@
 package models
 
+import "gowebapp2/utils"
+
 type User struct {
 	Id        uint64
 	Firstname string
@@ -21,7 +23,12 @@ func NewUser(user User) (bool, error) {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Firstname, user.Lastname, user.Email, user.Password)
+	hash, err := utils.Hash(user.Password)
+	if err != nil {
+		return false, err
+	}
+
+	_, err = stmt.Exec(user.Firstname, user.Lastname, user.Email, hash)
 	if err != nil {
 		return false, err
 	}
