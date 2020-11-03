@@ -44,7 +44,9 @@ func checkErrRegister(err error, w http.ResponseWriter, r *http.Request) {
 			models.ErrRequiredLastname,
 			models.ErrRequiredEmail,
 			models.ErrRequiredPassword,
-			models.ErrInvalidEmail:
+			models.ErrInvalidEmail,
+			models.ErrMaxLimit,
+			models.ErrDuplicateKeyEmail:
 			message = fmt.Sprintf("%s", err)
 		default:
 			utils.InternalServerError(w)
