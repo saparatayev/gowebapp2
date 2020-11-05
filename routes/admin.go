@@ -1,7 +1,10 @@
 package routes
 
-import "net/http"
+import (
+	"gowebapp2/utils"
+	"net/http"
+)
 
 func adminGetHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello! This is dashboard :)"))
+	utils.ExecuteTemplate(w, "admin.html", nil)
 }
