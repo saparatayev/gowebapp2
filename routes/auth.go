@@ -25,12 +25,12 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.PostForm.Get("email")
 	password := r.PostForm.Get("password")
 
-	_, err := auth.Signin(email, password)
+	user, err := auth.Signin(email, password)
 
-	checkErrAuthenticate(err, w, r)
+	checkErrAuthenticate(err, w, r, user)
 }
 
-func checkErrAuthenticate(err error, w http.ResponseWriter, r *http.Request) {
+func checkErrAuthenticate(err error, w http.ResponseWriter, r *http.Request, user models.User) {
 	session, _ := sessions.Store.Get(r, "session")
 
 	if err != nil {
@@ -50,5 +50,8 @@ func checkErrAuthenticate(err error, w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Write([]byte("Logged in successfully"))
+	session.Values["USERID"] = user.Id
+	session.Save(r, w)
+
+	http.Redirect(w, r, "/admin", 302)
 }

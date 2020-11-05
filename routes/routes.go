@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"gowebapp2/middleware"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,6 +16,7 @@ func NewRouter() *mux.Router {
 	r.HandleFunc("/register", registerPostHandler).Methods("POST")
 	r.HandleFunc("/login", loginGetHandler).Methods("GET")
 	r.HandleFunc("/login", loginPostHandler).Methods("POST")
+	r.HandleFunc("/admin", middleware.AuthRequired(adminGetHandler)).Methods("GET")
 
 	fileServer := http.FileServer(http.Dir("./assets/"))
 
