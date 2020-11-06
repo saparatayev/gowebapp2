@@ -50,45 +50,48 @@
           </div>
         </div>
 
-        <a href="/products/create" class="btn btn-primary float-right">Add</a>
-
-        {{ if (ne .Alert.Message "") }}
-        <p class="alert alert-{{ .Alert.Type }}">{{ .Alert.Message }}</p>
-        {{ end }}
-
+        <a href="/products" class="btn btn-primary float-right">Back</a>
         
         <div class="my-3 p-3 bg-white rounded shadow-sm">
-          <h6 class="border-bottom border-gray pb-2 mb-0">{{ .Total }} Products
-           
-          </h6>
-          <table class="table table-bordered">
-            <thead class="thead-dark">
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Amount</th>
-                <th>Category</th>
-                <th>Edit</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{ range .Products }}
-              <tr>
-                <td>{{ .Id }}</td>
-                <td>{{ .Name }}</td>
-                <td>{{ .PriceToString }}</td>
-                <td>{{ .Quantity }}</td>
-                <td>{{ .AmountToString }}</td>
-                <td>{{ .Category.Description }}</td>
-                <td><a href="/product/edit?productId={{ .Id }}" class="text-primary">Edit</a></td>
-                <td><a href="#" class="text-danger">Delete</a></td>
-              </tr>
-              {{ end }}
-            </tbody>
-          </table>
+            <h6 class="border-bottom border-gray pb-2 mb-0">New product</h6>
+            <form action="/products/create" method="post">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" placeholder="Name" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="text" name="price" placeholder="Price" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="text" name="quantity" placeholder="Quantity" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category" class="form-control">
+                                {{ range .Categories }}
+                                <option value="{{ .Id }}">{{ .Description }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
         </div>
       </main>
 

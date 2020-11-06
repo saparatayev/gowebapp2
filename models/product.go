@@ -11,6 +11,26 @@ type Product struct {
 	Category Category
 }
 
+func NewProduct(product Product) (bool, error) {
+	con := Connect()
+	defer con.Close()
+
+	sql := "INSERT INTO products(name, price, quantity, amount, category) VALUES ($1, $2, $3, $4, $5)"
+
+	stmt, err := con.Prepare(sql)
+	if err != nil {
+		return false, err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(product.Name, product.Price, product.Quantity, product.Amount, product.Category.Id)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func GetProducts() ([]Product, error) {
 	con := Connect()
 	defer con.Close()
@@ -92,6 +112,39 @@ func SearchProducts(search string) ([]Product, error) {
 	}
 
 	return products, nil
+}
+
+func GetProductById(id uint64) (Product, error) {
+	con := Connect()
+	defer con.Close()
+
+	sql := "select * from products where id = $1"
+
+	rs, err := con.Query(sql, id)
+	if err != nil {
+		return Product{}, err
+	}
+	defer rs.Close()
+
+	var product Product
+
+	if rs.Next() {
+		err := rs.Scan(&product.Id,
+			$product.Name,
+			$product.Price,
+			&product.Quantity,
+			&product.Amount,
+			product.Category.Id
+		)
+
+		// &product.Category.Id,
+		// 	&product.Category.Description,
+		// 	&product.Id,
+		// 	&product.Name,
+		// 	&product.Price,
+		// 	&product.Quantity,
+		// 	&product.Amount
+	}
 }
 
 func (p *Product) PriceToString() string {

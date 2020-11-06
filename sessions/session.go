@@ -6,7 +6,21 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+const (
+	USERID  = "USERID"
+	MESSAGE = "MESSAGE"
+	ALERT   = "ALERT"
+)
+
 var Store = sessions.NewCookieStore([]byte("S3CR3TK3Y"))
+
+func Message(message, alert string, w http.ResponseWriter, r *http.Request) {
+	session, _ := Store.Get(r, "session")
+
+	session.Values[MESSAGE] = message
+	session.Values[ALERT] = alert
+	session.Save(r, w)
+}
 
 func SessionOptions(domain, path string, maxAge int, httpOnly bool) {
 	Store.Options = &sessions.Options{
