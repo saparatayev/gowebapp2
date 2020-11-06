@@ -8,6 +8,15 @@ import (
 
 var Store = sessions.NewCookieStore([]byte("S3CR3TK3Y"))
 
+func SessionOptions(domain, path string, maxAge int, httpOnly bool) {
+	Store.Options = &sessions.Options{
+		Domain:   domain,
+		Path:     path,
+		MaxAge:   maxAge,
+		HttpOnly: httpOnly,
+	}
+}
+
 func Flash(w http.ResponseWriter, r *http.Request) (string, string) {
 	message, alert := "", ""
 
@@ -15,6 +24,7 @@ func Flash(w http.ResponseWriter, r *http.Request) (string, string) {
 
 	untypedMessage := session.Values["MESSAGE"]
 	message, ok := untypedMessage.(string)
+
 	if !ok {
 		return "", ""
 	}
