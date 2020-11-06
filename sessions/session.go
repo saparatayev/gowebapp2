@@ -17,6 +17,20 @@ func SessionOptions(domain, path string, maxAge int, httpOnly bool) {
 	}
 }
 
+func IsLogged(r *http.Request) (uint64, bool) {
+	session, _ := Store.Get(r, "session")
+
+	untypedUserId := session.Values["USERID"]
+
+	userId, ok := untypedUserId.(uint64)
+
+	if !ok {
+		return 0, false
+	}
+
+	return userId, true
+}
+
 func Flash(w http.ResponseWriter, r *http.Request) (string, string) {
 	message, alert := "", ""
 

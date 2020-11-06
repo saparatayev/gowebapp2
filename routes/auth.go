@@ -10,6 +10,13 @@ import (
 )
 
 func loginGetHandler(w http.ResponseWriter, r *http.Request) {
+	_, isAuth := sessions.IsLogged(r)
+
+	if isAuth {
+		http.Redirect(w, r, "/admin", 302)
+		return
+	}
+
 	message, alert := sessions.Flash(w, r)
 
 	utils.ExecuteTemplate(w, "login.html", struct {

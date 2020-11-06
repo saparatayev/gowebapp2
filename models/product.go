@@ -17,7 +17,7 @@ func GetProducts() ([]Product, error) {
 
 	sql := `select c.id, c.description,
 		p.id, p.name, p.price, p.quantity, p.amount
-		from products as p inner join category as c on c.id=p.category`
+		from products as p inner join category as c on c.id=p.category order by p.id asc`
 
 	rs, err := con.Query(sql)
 	if err != nil {
@@ -92,4 +92,12 @@ func SearchProducts(search string) ([]Product, error) {
 	}
 
 	return products, nil
+}
+
+func (p *Product) PriceToString() string {
+	return fmt.Sprintf("%.2f", p.Price)
+}
+
+func (p *Product) AmountToString() string {
+	return fmt.Sprintf("%.2f", p.Amount)
 }
