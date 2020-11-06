@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gowebapp2/models"
 	"gowebapp2/routes"
+	"gowebapp2/sessions"
 	"gowebapp2/utils"
 	"log"
 	"net/http"
@@ -18,6 +19,8 @@ func main() {
 	fmt.Printf("Listening Port %s\n", PORT)
 
 	utils.LoadTemplates("views/*.html")
+
+	sessions.SessionOptions("localhost", "/", 3600, true)
 
 	r := routes.NewRouter()
 
