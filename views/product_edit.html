@@ -53,7 +53,7 @@
         <a href="/products" class="btn btn-primary float-right">Back</a>
         
         <div class="my-3 p-3 bg-white rounded shadow-sm">
-            <h6 class="border-bottom border-gray pb-2 mb-0">Edit product</h6>
+            <h6 class="border-bottom border-gray pb-2 mb-0">Edit product?</h6>
             <form action="/products/create" method="post">
                 <div class="form-row">
                     <div class="col-md-12">
@@ -82,7 +82,7 @@
                             <label>Category</label>
                             <select name="category" class="form-control">
                                 {{ range .Categories }}
-                                    {{ if (eq .Product.Category.Id .Id) }}
+                                    {{ if (eq $.Product.Category.Id .Id) }}
                                         <option value="{{ .Id }}" selected>{{ .Description }}</option>
                                     {{ else }}
                                         <option value="{{ .Id }}">{{ .Description }}</option>

@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"gowebapp2/models"
 	"gowebapp2/sessions"
 	"gowebapp2/utils"
@@ -92,4 +93,28 @@ func productEditGetHandler(w http.ResponseWriter, r *http.Request) {
 	keys := r.URL.Query()
 
 	productId, _ := strconv.ParseUint(keys.Get("productId"), 10, 64)
+
+	product, err := models.GetProductById(productId)
+	if err != nil {
+		utils.InternalServerError(w)
+		return
+	}
+
+	fmt.Println(product)
+
+	categories, err := models.GetCategories()
+	if err != nil {
+		utils.InternalServerError(w)
+		return
+	}
+
+	fmt.Println(categories)
+
+	utils.ExecuteTemplate(w, "product_edit.html", struct {
+		Categories []models.Category
+		Product    models.Product
+	}{
+		Categories: categories,
+		Product:    product,
+	})
 }
