@@ -70,6 +70,8 @@ func verifyInputProduct(r *http.Request) (models.Product, error) {
 
 	var err error = nil
 
+	product.Id, _ = strconv.ParseUint(r.PostForm.Get("id"), 10, 64)
+
 	product.Name = r.PostForm.Get("name")
 
 	product.Price, err = strconv.ParseFloat(r.PostForm.Get("price"), 64)
@@ -100,21 +102,62 @@ func productEditGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(product)
-
 	categories, err := models.GetCategories()
 	if err != nil {
 		utils.InternalServerError(w)
 		return
 	}
 
-	fmt.Println(categories)
+	priceFormat := product.PriceToString()
 
 	utils.ExecuteTemplate(w, "product_edit.html", struct {
-		Categories []models.Category
-		Product    models.Product
+		Categories  []models.Category
+		Product     models.Product
+		PriceFormat string
 	}{
-		Categories: categories,
-		Product:    product,
+		Categories:  categories,
+		Product:     product,
+		PriceFormat: priceFormat,
 	})
+}
+
+func productEditPostHandler(w http.ResponseWriter, r *http.Request) {
+	product, err := verifyInputProduct(r)
+	if err != nil {
+		utils.InternalServerError(w)
+		return
+	}
+
+	rows, err := models.UpdateProduct(product)
+	if err != nil {
+		utils.InternalServerError(w)
+		return
+	}
+
+	sessions.Message(fmt.Sprintf("Products %d info changed", rows), "info", w, r)
+
+	http.Redirect(w, r, "/products", 302)
+}
+
+func productDeleteGetHandler(w http.ResponseWriter, r *http.Request) {
+	keys := r.URL.Query()
+
+	id, _ := strconv.ParseUint(keys.Get("productId"), 10, 64)
+
+	ok, _ := strconv.ParseBool(keys.Get("confirm"))
+	if !ok {
+		http.Redirect(w, r, "/products", 302)
+		return
+	}
+
+	rows, err := models.DeleteProduct(id)
+
+	if err != nil {
+		utils.InternalServerError(w)
+		return
+	}
+
+	sessions.Message(fmt.Sprintf("Product %d deleted", rows), "warning", w, r)
+
+	http.Redirect(w, r, "/products", 302)
 }

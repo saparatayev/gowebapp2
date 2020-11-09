@@ -84,7 +84,7 @@
                 <td>{{ .AmountToString }}</td>
                 <td>{{ .Category.Description }}</td>
                 <td><a href="/product/edit?productId={{ .Id }}" class="text-primary">Edit</a></td>
-                <td><a href="#" class="text-danger">Delete</a></td>
+                <td><a href="/product/delete?productId={{ .Id }}&confirm=true" class="text-danger">Delete</a></td>
               </tr>
               {{ end }}
             </tbody>

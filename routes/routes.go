@@ -22,6 +22,8 @@ func NewRouter() *mux.Router {
 	r.HandleFunc("/products/create", middleware.AuthRequired(productsCreateGetHandler)).Methods("GET")
 	r.HandleFunc("/products/create", middleware.AuthRequired(productsCreatePostHandler)).Methods("POST")
 	r.HandleFunc("/product/edit", middleware.AuthRequired(productEditGetHandler)).Methods("GET")
+	r.HandleFunc("/product/edit", middleware.AuthRequired(productEditPostHandler)).Methods("POST")
+	r.HandleFunc("/product/delete", middleware.AuthRequired(productDeleteGetHandler)).Methods("GET")
 
 	fileServer := http.FileServer(http.Dir("./assets/"))
 

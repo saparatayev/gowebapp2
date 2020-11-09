@@ -145,7 +145,7 @@ func GetProductById(id uint64) (Product, error) {
 	return product, nil
 }
 
-func UpdateProduct(product Product) (rows, error) {
+func UpdateProduct(product Product) (int64, error) {
 	con := Connect()
 	defer con.Close()
 
@@ -157,13 +157,42 @@ func UpdateProduct(product Product) (rows, error) {
 	}
 	defer stmt.Close()
 
-	rs, err := stmt.Query(product.Name, product.Price, product.Quantity, product.Amount, product.Category.Id, product.Id)
+	rs, err := stmt.Exec(product.Name, product.Price, product.Quantity, product.Amount, product.Category.Id, product.Id)
 	if err != nil {
 		return 0, err
 	}
 
-	rows, err := rs.rowsAffe
-	defer rs.Close()
+	rows, err := rs.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rows, nil
+}
+
+func DeleteProduct(id uint64) (int64, error) {
+	con := Connect()
+	defer con.Close()
+
+	sql := "delete from products where id = $1"
+
+	stmt, err := con.Prepare(sql)
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	rs, err := stmt.Exec(id)
+	if err != nil {
+		return 0, err
+	}
+
+	rows, err := rs.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rows, nil
 }
 
 func (p *Product) PriceToString() string {
