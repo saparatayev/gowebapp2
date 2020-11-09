@@ -1,12 +1,17 @@
 package routes
 
 import (
+	"errors"
 	"fmt"
 	"gowebapp2/models"
 	"gowebapp2/sessions"
 	"gowebapp2/utils"
 	"net/http"
 	"strconv"
+)
+
+var (
+	ErrPriceValue = errors.New("Price is not valid")
 )
 
 func productsGetHandler(w http.ResponseWriter, r *http.Request) {
@@ -73,6 +78,10 @@ func verifyInputProduct(r *http.Request) (models.Product, error) {
 	product.Id, _ = strconv.ParseUint(r.PostForm.Get("id"), 10, 64)
 
 	product.Name = r.PostForm.Get("name")
+
+	if !models.Max(product.Name, 255) {
+		return models.Product{}, models.ErrMaxLimit
+	}
 
 	product.Price, err = strconv.ParseFloat(r.PostForm.Get("price"), 64)
 	if err != nil {
