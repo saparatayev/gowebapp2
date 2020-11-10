@@ -51,13 +51,17 @@
         </div>
 
         <a href="/products" class="btn btn-primary float-right">Back</a>
+
+        {{ if (ne .Alert.Message "") }}
+        <p class="alert alert-{{ .Alert.Type }}">{{ .Alert.Message }}</p>
+        {{ end }}
         
         <div class="my-3 p-3 bg-white rounded shadow-sm">
             <h6 class="border-bottom border-gray pb-2 mb-0">Edit product?</h6>
             <form action="/product/edit" method="post">
                 
                 <input type="hidden" name="id" value="{{.Product.Id}}">
-                
+
                 <div class="form-row">
                     <div class="col-md-12">
                         <div class="form-group">

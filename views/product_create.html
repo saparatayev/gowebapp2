@@ -52,6 +52,10 @@
 
         <a href="/products" class="btn btn-primary float-right">Back</a>
         
+        {{ if (ne .Alert.Message "") }}
+        <p class="alert alert-{{ .Alert.Type }}">{{ .Alert.Message }}</p>
+        {{ end }}
+        
         <div class="my-3 p-3 bg-white rounded shadow-sm">
             <h6 class="border-bottom border-gray pb-2 mb-0">New product</h6>
             <form action="/products/create" method="post">

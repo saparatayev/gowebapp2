@@ -11,7 +11,9 @@ import (
 )
 
 var (
-	ErrPriceValue = errors.New("Price is not valid")
+	ErrPriceValue          = errors.New("Price is not valid")
+	ErrQuantityValue       = errors.New("Quantity is not valid")
+	ErrRequiredProductName = errors.New("Product name is required")
 )
 
 func productsGetHandler(w http.ResponseWriter, r *http.Request) {
@@ -43,17 +45,24 @@ func productsCreateGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	message, alert := sessions.Flash(w, r)
+
 	utils.ExecuteTemplate(w, "product_create.html", struct {
 		Categories []models.Category
+		Alert      utils.Alert
 	}{
 		Categories: categories,
+		Alert:      utils.NewAlert(message, alert),
 	})
 }
 
 func productsCreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	product, err := verifyInputProduct(r)
 	if err != nil {
-		utils.InternalServerError(w)
+		sessions.Message(fmt.Sprintf("%s", err), "danger", w, r)
+
+		http.Redirect(w, r, "/products/create", 302)
+
 		return
 	}
 
@@ -79,18 +88,22 @@ func verifyInputProduct(r *http.Request) (models.Product, error) {
 
 	product.Name = r.PostForm.Get("name")
 
+	if models.IsEmpty(product.Name) {
+		return product, ErrRequiredProductName
+	}
+
 	if !models.Max(product.Name, 255) {
-		return models.Product{}, models.ErrMaxLimit
+		return product, models.ErrMaxLimit
 	}
 
 	product.Price, err = strconv.ParseFloat(r.PostForm.Get("price"), 64)
 	if err != nil {
-		return models.Product{}, err
+		return product, ErrPriceValue
 	}
 
 	product.Quantity, err = strconv.Atoi(r.PostForm.Get("quantity"))
 	if err != nil {
-		return models.Product{}, err
+		return product, ErrQuantityValue
 	}
 
 	product.Amount = product.Price * float64(product.Quantity)
@@ -119,21 +132,29 @@ func productEditGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	priceFormat := product.PriceToString()
 
+	message, alert := sessions.Flash(w, r)
+
 	utils.ExecuteTemplate(w, "product_edit.html", struct {
 		Categories  []models.Category
 		Product     models.Product
 		PriceFormat string
+		Alert       utils.Alert
 	}{
 		Categories:  categories,
 		Product:     product,
 		PriceFormat: priceFormat,
+		Alert:       utils.NewAlert(message, alert),
 	})
 }
 
 func productEditPostHandler(w http.ResponseWriter, r *http.Request) {
 	product, err := verifyInputProduct(r)
+
 	if err != nil {
-		utils.InternalServerError(w)
+		sessions.Message(fmt.Sprintf("%s", err), "danger", w, r)
+
+		http.Redirect(w, r, fmt.Sprintf("/product/edit?productId=%d", product.Id), 302)
+
 		return
 	}
 
