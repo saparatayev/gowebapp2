@@ -34,7 +34,7 @@ func registerPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkErrRegister(err error, w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(r, "session")
+	// session, _ := sessions.Store.Get(r, "session")
 
 	message := "Succesfully registered"
 
@@ -54,18 +54,34 @@ func checkErrRegister(err error, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		session.Values["MESSAGE"] = message
-		session.Values["ALERT"] = "danger"
-		session.Save(r, w)
+		sessions.Message(message, "danger", w, r)
 
 		http.Redirect(w, r, "/register", 302)
 
 		return
 	}
 
-	session.Values["MESSAGE"] = message
-	session.Values["ALERT"] = "success"
-	session.Save(r, w)
+	sessions.Message(message, "success", w, r)
 
 	http.Redirect(w, r, "/login", 302)
+}
+
+func usersGetHandler(w http.ResponseWriter, r *http.Request) {
+	users, err := models.GetUsers()
+	if err != nil {
+		utils.InternalServerError(w)
+		return
+	}
+
+	total := int64(len(users))
+
+	utils.ExecuteTemplate(w, "users.html", struct {
+		Users []models.User
+		Total int64
+		// Alert utils.Alert
+	}{
+		Users: users,
+		Total: total,
+		// Alert: utils.NewAlert(message, alert),
+	})
 }

@@ -6,6 +6,7 @@ import (
 	"gowebapp2/models"
 	"gowebapp2/sessions"
 	"gowebapp2/utils"
+	"html"
 	"net/http"
 	"strconv"
 )
@@ -86,7 +87,7 @@ func verifyInputProduct(r *http.Request) (models.Product, error) {
 
 	product.Id, _ = strconv.ParseUint(r.PostForm.Get("id"), 10, 64)
 
-	product.Name = r.PostForm.Get("name")
+	product.Name = html.EscapeString(r.PostForm.Get("name"))
 
 	if models.IsEmpty(product.Name) {
 		return product, ErrRequiredProductName

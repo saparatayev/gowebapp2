@@ -7,31 +7,40 @@ import (
 )
 
 func adminGetHandler(w http.ResponseWriter, r *http.Request) {
-	allProducts, allUsers, err := LoadData()
+	products, users, err := LoadData()
 	if err != nil {
 		utils.InternalServerError(w)
 		return
 	}
 
+	allProducts := int64(len(products))
+	allUsers := int64(len(users))
+	lastUser := users[len(users)-1]
+	lastProduct := products[len(products)-1]
+
 	utils.ExecuteTemplate(w, "admin.html", struct {
 		AllProducts int64
 		AllUsers    int64
+		LastProduct models.Product
+		LastUser    models.User
 	}{
 		AllProducts: allProducts,
 		AllUsers:    allUsers,
+		LastProduct: lastProduct,
+		LastUser:    lastUser,
 	})
 }
 
-func LoadData() (int64, int64, error) {
-	allProducts, err := models.Count("products")
+func LoadData() ([]models.Product, []models.User, error) {
+	products, err := models.GetProducts()
 	if err != nil {
-		return 0, 0, err
+		return nil, nil, err
 	}
 
-	allUsers, err := models.Count("users")
+	users, err := models.GetUsers()
 	if err != nil {
-		return 0, 0, err
+		return nil, nil, err
 	}
 
-	return allProducts, allUsers, nil
+	return products, users, nil
 }
